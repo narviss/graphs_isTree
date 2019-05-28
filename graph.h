@@ -9,6 +9,7 @@ class Graph {
 
 private:
     vector<vector<int> > a;
+    char method;
 public:
 
     // Конструктор графа, где принимаем название файла
@@ -18,6 +19,11 @@ public:
 
     // Пустой граф с N вершинами
     Graph(int N = 0) {
+        createGraph(N);
+    }
+
+    // Создать граф с N вершинами
+    void createGraph(int N){
         a.resize(N);
         for (int i = 0; i < N; ++i){
             a[i].resize(N);
@@ -41,7 +47,17 @@ public:
     void scan(char *file){
         ifstream fin(file);
         int N;
-        fin >> N;
+        fin >> method >> N;
+        if(method == 'M') {
+            scanMatrix(N, fin);
+        } else if(method == 'L'){
+            scanList(N, fin);
+        }
+        fin.close();
+    };
+
+    // Чтение матрицы смежности или весов
+    void scanMatrix(int N, ifstream &fin){
         a.resize(N);
         for (int i = 0; i < N; ++i){
             a[i].resize(N);
@@ -49,15 +65,40 @@ public:
                 fin >> a[i][j];
             }
         }
-        fin.close();
-    };
+    }
+
+    // Чтение матрицы смежности или весов
+    void scanList(int N, ifstream &fin){
+        createGraph(N);
+        while(!fin.eof()){
+            int i, j;
+            fin >> i >> j;
+            a[i][j] = 1;
+        }
+    }
 
     // Вывести граф на консоль
     void print() {
+        if(method == 'M') {
+            printMatrix();
+        } else if(method == 'L'){
+            printList();
+        }
+    }
+
+    void printMatrix(){
         for (int i = 0; i < a.size(); ++i) {
             for (int j = 0; j < a.size(); ++j)
                 cout << a[i][j] << " ";
             cout << endl;
+        }
+    }
+
+    void printList(){
+        for (int i = 0; i < a.size(); ++i) {
+            for (int j = 0; j < a.size(); ++j)
+                if(a[i][j])
+                    cout << i << " " << j << endl;
         }
     }
 
