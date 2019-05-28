@@ -8,11 +8,11 @@ using namespace std;
 class Graph {
 
 private:
-    vector<vector<int>> a;
+    vector<vector<int> > a;
 public:
 
     // Конструктор графа, где принимаем название файла
-    Graph(string file) {
+    Graph(char *file) {
         this->scan(file);
     }
 
@@ -33,11 +33,12 @@ public:
     vector<int> getRow(int index) {
         if (index >= 0 && index < a.size())
             return a[index];
-        return {0};
+        vector<int> b(0);
+        return b;
     }
 
     // Прочитать граф с файла
-    void scan(string file){
+    void scan(char *file){
         ifstream fin(file);
         int N;
         fin >> N;
@@ -84,8 +85,12 @@ public:
      * Если у нас количество пройденных вершин равно всем существующим, значит мы прошли все вершины единожды и это дерево.
     */
     bool isTree(){
-        vector<bool> visited(a.size(), false);
-        return (this->dfs(0, visited) == a.size());
+        for(int i = 0; i < a.size(); i++) {
+            vector<bool> visited(a.size(), false);
+            if(this->dfs(i, visited) == a.size())
+                 return true;
+        }
+        return false;
     }
 
     // Удаление одной вершины
